@@ -3,7 +3,10 @@
 /**
  * The WP_List_Table Class copied from WP core
  */
-require_once plugin_dir_path(__DIR__) . 'includes/libraries/class-wp-list-table.php';
+require_once plugin_dir_path(__FILE__) . 'class-review-admin.php';
+require_once plugin_dir_path(__DIR__) . 'libraries/class-wp-list-table.php';
+require_once plugin_dir_path(__FILE__) . 'class-review-list-table.php';
+// require_once plugin_dir_path(__DIR__) . 'libraries/class-wp-list-table.php';
 
 /**
  * The admin-specific functionality of the plugin.
@@ -14,16 +17,6 @@ require_once plugin_dir_path(__DIR__) . 'includes/libraries/class-wp-list-table.
  * @package    Plugin_Name
  * @subpackage Plugin_Name/admin
  */
- class Review_List_Table extends WP_List_Table_Duplicate
- {
-     // just the barebone implementation.
-     public function get_columns()
-     {
-     }
-     public function prepare_items()
-     {
-     }
- }
 
 /**
  * The admin-specific functionality of the plugin.
@@ -35,7 +28,7 @@ require_once plugin_dir_path(__DIR__) . 'includes/libraries/class-wp-list-table.
  * @subpackage Plugin_Name/admin
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name_Admin
+class Admin
 {
 
     /**
@@ -57,16 +50,35 @@ class Plugin_Name_Admin
     private $version;
 
     /**
+     * The text domain of this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string    $plugin_text_domain    The text domain of this plugin.
+     */
+    private $plugin_text_domain;
+
+    /**
+     * WP_List_Table object
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      review_list_table    $review_list_table
+     */
+    private $review_list_table;
+
+    /**
      * Initialize the class and set its properties.
      *
      * @since    1.0.0
      * @param      string    $plugin_name       The name of this plugin.
      * @param      string    $version    The version of this plugin.
      */
-    public function __construct($plugin_name, $version)
+    public function __construct($plugin_name, $version, $plugin_text_domain)
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+        $this->plugin_text_domain = $plugin_text_domain;
     }
 
     /**
@@ -128,7 +140,7 @@ class Plugin_Name_Admin
                             __('User Reviews', $this->plugin_text_domain), //menu title
                             'manage_options', //capability
                             $this->plugin_name, //menu_slug,
-                            array( $this, 'load_user_list_table' )
+                            array( $this, 'load_review_list_table' )
                         );
 
         /*
@@ -138,6 +150,39 @@ class Plugin_Name_Admin
          * The callback below will be called when the respective page is loaded
          *
          */
-        add_action('load-'.$page_hook, array( $this, 'load_user_list_table_screen_options' ));
+        add_action('load-'.$page_hook, array( $this, 'load_review_list_table_screen_options' ));
+    }
+
+    /**
+    * Screen options for the List Table
+    *
+    * Callback for the load-($page_hook_suffix)
+    * Called when the plugin page is loaded
+    *
+    * @since    1.0.0
+    */
+    public function load_review_list_table_screen_options()
+    {
+        $arguments	=	array(
+                            'label'		=>	__('Reviews Per Page', $this->plugin_text_domain),
+                            'default'	=>	5,
+                            'option'	=>	'reviews_per_page'
+                        );
+
+        add_screen_option('per_page', $arguments);
+
+        // instantiate the Review List Table
+        $this->review_list_table = new Review_List_Table($this->plugin_text_domain);
+    }
+
+    /*
+    * Callback for the add_reviews_page() in the add_plugin_admin_menu() method of this class.
+    */
+    public function load_review_list_table()
+    {
+        // query, filter, and sort the data
+        $this->review_list_table->prepare_items();
+        // render the List Table
+        include_once('partials/plugin-reviews-display.php');
     }
 }

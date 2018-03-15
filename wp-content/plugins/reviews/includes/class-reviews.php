@@ -59,6 +59,16 @@ class Plugin_Name
     protected $version;
 
     /**
+     * The text domain of the plugin.
+     *
+     * @since    1.0.0
+     * @access   protected
+     * @var      string    $version    The current version of the plugin.
+     */
+    protected $plugin_text_domain;
+
+
+    /**
      * Define the core functionality of the plugin.
      *
      * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -89,7 +99,7 @@ class Plugin_Name
      *
      * - Plugin_Name_Loader. Orchestrates the hooks of the plugin.
      * - Plugin_Name_i18n. Defines internationalization functionality.
-     * - Plugin_Name_Admin. Defines all hooks for the admin area.
+     * - Admin. Defines all hooks for the admin area.
      * - Plugin_Name_Public. Defines all hooks for the public side of the site.
      *
      * Create an instance of the loader which will be used to register the hooks
@@ -116,7 +126,7 @@ class Plugin_Name
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-reviews-admin.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-review-admin.php';
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
@@ -152,7 +162,7 @@ class Plugin_Name
      */
     private function define_admin_hooks()
     {
-        $plugin_admin = new Plugin_Name_Admin($this->get_plugin_name(), $this->get_version());
+        $plugin_admin = new Admin($this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain());
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -170,7 +180,7 @@ class Plugin_Name
      */
     private function define_public_hooks()
     {
-        $plugin_public = new Plugin_Name_Public($this->get_plugin_name(), $this->get_version());
+        $plugin_public = new Plugin_Name_Public($this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain());
 
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -218,5 +228,16 @@ class Plugin_Name
     public function get_version()
     {
         return $this->version;
+    }
+
+    /**
+     * Retrieve the text domain of the plugin.
+     *
+     * @since     1.0.0
+     * @return    string    The text domain of the plugin.
+     */
+    public function get_plugin_text_domain()
+    {
+        return $this->plugin_text_domain;
     }
 }

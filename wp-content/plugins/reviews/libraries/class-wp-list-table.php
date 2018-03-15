@@ -13,7 +13,7 @@
  * @since 3.1.0
  * @access private
  */
-class WP_List_Table_Duplicate
+class Duplicate_WP_List_Table
 {
 
     /**
