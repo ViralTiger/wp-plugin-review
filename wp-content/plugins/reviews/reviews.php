@@ -17,10 +17,13 @@ function createTable()
     $table_name = $wpdb->prefix . "reviews";
     $sql = "CREATE TABLE $table_name (
     id mediumint(9) NOT NULL AUTO_INCREMENT,
+    product varchar(191) DEFAULT '' NOT NULL,
+    full_name varchar(191) DEFAULT '' NOT NULL,
+    last_name varchar(191) DEFAULT '' NOT NULL,
+    title varchar(191) DEFAULT '' NOT NULL,
+    description varchar(191) DEFAULT '' NOT NULL,
+    is_approved tinyint(1) DEFAULT 0 NOT NULL,
     time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-    name tinytext NOT NULL,
-    text text NOT NULL,
-    url varchar(55) DEFAULT '' NOT NULL,
     PRIMARY KEY  (id)
   ) $charset_collate;";
 
