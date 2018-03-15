@@ -6,9 +6,11 @@ Plugin Name: Reviews
 
 # Activation and deactivation hooks provide ways to perform actions when plugins are activated or deactivated.
 
-register_activation_hook(__FILE__, 'tableCreation');
+register_activation_hook(__FILE__, 'createTable');
 
-function tableCreation()
+
+
+function createTable()
 {
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
@@ -26,4 +28,14 @@ function tableCreation()
     dbDelta($sql);
 }
 
-register_deactivation_hook(__FILE__, 'pluginprefix_function_to_run');
+register_deactivation_hook(__FILE__, 'dropTable');
+
+function dropTable()
+{
+    global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
+    $table_name = $wpdb->prefix . "reviews";
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    $wpdb->query("DROP TABLE IF EXISTS $table_name");
+    dbDelta($sql);
+}
