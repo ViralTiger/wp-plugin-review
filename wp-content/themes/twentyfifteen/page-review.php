@@ -26,7 +26,6 @@ get_header(); ?>
               function my_contact_form_generate_response($type, $message)
               {
                   global $response;
-
                   if ($type == "success") {
                       $response = "<div class='success'>{$message}</div>";
                   } else {
