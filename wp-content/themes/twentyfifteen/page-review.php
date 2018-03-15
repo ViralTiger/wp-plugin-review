@@ -41,16 +41,35 @@ get_header(); ?>
               $message_sent    = "Thanks! Your message has been sent.";
 
               //user posted variables
-              $name = $_POST['message_name'];
-              $email = $_POST['message_email'];
-              $message = $_POST['message_text'];
-              $human = $_POST['message_human'];
+              $review = [
+                'product' => $_POST['product'],
+                'full_name' => $_POST['first_name'],
+                'last_name'  => $_POST['last_name'],
+                'email'      => $_POST['email'],
+                'title'      =>  $_POST['title'],
+                'description' => $_POST['description'],
+                'rating'      => $_POST['rating'],
+              ];
+
+              $human  = $_POST['message_human'];
+
+
+              function insertReview($review)
+              {
+                  global $wpdb;
+                  $wpdb->insert(
+                      $wpdb->prefix . 'reviews',
+                      $review
+                  );
+              }
+
+
 
               //php mailer variables
               $to = get_option('admin_email');
               $subject = "Someone sent a message from ".get_bloginfo('name');
-              $headers = 'From: '. $email . "\r\n" .
-                'Reply-To: ' . $email . "\r\n";
+              $headers = 'From: '. $review['email'] . "\r\n" .
+                         'Reply-To: ' . $review['email'] . "\r\n";
 
               if (!$human == 0) {
                   if ($human != 2) {
@@ -59,15 +78,16 @@ get_header(); ?>
                   else {
 
                   //validate email
-                      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                      if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL)) {
                           my_contact_form_generate_response("error", $email_invalid);
                       } else { //email is valid
                           //validate presence of name and message
-                          if (empty($name) || empty($message)) {
+                          if (empty($review['email'])) {
                               my_contact_form_generate_response("error", $missing_content);
                           } else { //ready to go!
-                              $sent = wp_mail($to, $subject, strip_tags($message), $headers);
+                              $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
                               if ($sent) {
+                                  insertReview($review);
                                   my_contact_form_generate_response("success", $message_sent);
                               } //message sent!
                               else {
@@ -114,12 +134,34 @@ get_header(); ?>
               <div id="respond">
                 <?php echo $response; ?>
                 <form action="<?php the_permalink(); ?>" method="post">
-                  <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
-                  <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-                  <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
-                  <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
+                  <label for="name">Product: <span>*</span></label>
+                  <select name="product" value="<?php echo esc_attr($_POST['product']); ?>">
+                    <option value="Product">Product</option>
+                  </select>
+
+                  <label for="first_name">First Name: <span>*</span></label>
+                  <input type="text" name="first_name" value="<?php echo esc_attr($_POST['first_name']); ?>">
+
+                  <label for="last_name">Last Name: <span>*</span></label>
+                  <input type="text" name="last_name" value="<?php echo esc_attr($_POST['last_name']); ?>">
+
+                  <label for="email">Email: <span>*</span></label>
+                  <input type="text" name="email" value="<?php echo esc_attr($_POST['email']); ?>">
+
+                  <label for="title">Title: <span>*</span></label>
+                  <input type="text" name="title" value="<?php echo esc_attr($_POST['title']); ?>">
+
+									<label for="rating">Rating: <span>*</span></label>
+									<input type="text" name="rating" value="<?php echo esc_attr($_POST['rating']); ?>">
+
+                  <label for="description">Message: <span>*</span></label>
+                  <textarea type="text" name="description"><?php echo esc_textarea($_POST['description']); ?></textarea>
+
+                  <label for="message_human">Human Verification: <span>*</span></label>
+                  <input type="text" style="width: 60px;" name="message_human"> + 3 = 5
+
                   <input type="hidden" name="submitted" value="1">
-                  <p><input type="submit"></p>
+                  <input type="submit"></p>
                 </form>
               </div>
 
