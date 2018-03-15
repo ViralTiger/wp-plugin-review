@@ -114,4 +114,30 @@ class Plugin_Name_Admin
 
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/reviews-admin.js', array( 'jquery' ), $this->version, false);
     }
+
+
+    /**
+     * Callback for the user sub-menu in define_admin_hooks() for class Init.
+     *
+     * @since    1.0.0
+     */
+    public function add_plugin_admin_menu()
+    {
+        $page_hook = add_users_page(
+                            __('User Reviews', $this->plugin_text_domain), //page title
+                            __('User Reviews', $this->plugin_text_domain), //menu title
+                            'manage_options', //capability
+                            $this->plugin_name, //menu_slug,
+                            array( $this, 'load_user_list_table' )
+                        );
+
+        /*
+         * The $page_hook_suffix can be combined with the load-($page_hook) action hook
+         * https://codex.wordpress.org/Plugin_API/Action_Reference/load-(page)
+         *
+         * The callback below will be called when the respective page is loaded
+         *
+         */
+        add_action('load-'.$page_hook, array( $this, 'load_user_list_table_screen_options' ));
+    }
 }

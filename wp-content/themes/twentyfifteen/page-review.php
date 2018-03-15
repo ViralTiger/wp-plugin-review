@@ -41,17 +41,53 @@ get_header(); ?>
               $message_sent    = "Thanks! Your message has been sent.";
 
               //user posted variables
-              $review = [
-                'product' => $_POST['product'],
-                'full_name' => $_POST['first_name'],
-                'last_name'  => $_POST['last_name'],
-                'email'      => $_POST['email'],
-                'title'      =>  $_POST['title'],
-                'description' => $_POST['description'],
-                'rating'      => $_POST['rating'],
-              ];
+              if (isset($_POST['product'])) {
+                  $review = [
+                  'product'   => $_POST['product'],
+                  'full_name' => $_POST['first_name'],
+                  'last_name'  => $_POST['last_name'],
+                  'email'      => $_POST['email'],
+                  'title'      =>  $_POST['title'],
+                  'description' => $_POST['description'],
+                  'rating'      => $_POST['rating'],
+                ];
+                  $human  = $_POST['message_human'];
+                  //php mailer variables
+                  $to = get_option('admin_email');
+                  $subject = "Someone sent a message from ".get_bloginfo('name');
+                  $headers = 'From: '. $review['email'] . "\r\n" .
+                             'Reply-To: ' . $review['email'] . "\r\n";
 
-              $human  = $_POST['message_human'];
+
+                  if (!$human == 0) {
+                      if ($human != 2) {
+                          my_contact_form_generate_response("error", $not_human);
+                      } //not human!
+                      else {
+
+                     //validate email
+                          if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL)) {
+                              my_contact_form_generate_response("error", $email_invalid);
+                          } else { //email is valid
+                              //validate presence of name and message
+                              if (empty($review['email'])) {
+                                  my_contact_form_generate_response("error", $missing_content);
+                              } else { //ready to go!
+                                  $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
+                                  if ($sent) {
+                                      insertReview($review);
+                                      my_contact_form_generate_response("success", $message_sent);
+                                  } //message sent!
+                                  else {
+                                      my_contact_form_generate_response("error", $message_unsent);
+                                  } //message wasn't sent
+                              }
+                          }
+                      }
+                  } elseif ($_POST['submitted']) {
+                      my_contact_form_generate_response("error", $missing_content);
+                  }
+              }
 
 
               function insertReview($review)
@@ -63,42 +99,6 @@ get_header(); ?>
                   );
               }
 
-
-
-              //php mailer variables
-              $to = get_option('admin_email');
-              $subject = "Someone sent a message from ".get_bloginfo('name');
-              $headers = 'From: '. $review['email'] . "\r\n" .
-                         'Reply-To: ' . $review['email'] . "\r\n";
-
-              if (!$human == 0) {
-                  if ($human != 2) {
-                      my_contact_form_generate_response("error", $not_human);
-                  } //not human!
-                  else {
-
-                  //validate email
-                      if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL)) {
-                          my_contact_form_generate_response("error", $email_invalid);
-                      } else { //email is valid
-                          //validate presence of name and message
-                          if (empty($review['email'])) {
-                              my_contact_form_generate_response("error", $missing_content);
-                          } else { //ready to go!
-                              $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
-                              if ($sent) {
-                                  insertReview($review);
-                                  my_contact_form_generate_response("success", $message_sent);
-                              } //message sent!
-                              else {
-                                  my_contact_form_generate_response("error", $message_unsent);
-                              } //message wasn't sent
-                          }
-                      }
-                  }
-              } elseif ($_POST['submitted']) {
-                  my_contact_form_generate_response("error", $missing_content);
-              }
           ?>
 
           <!-- Form -->
