@@ -20,7 +20,7 @@
         <div id="nds-wp-list-table-demo">
             <div id="nds-post-body">
 		<form id="nds-user-list-form" method="get">
-			<?php $this->user_list_table->display(); ?>
+			<?php $this->review_list_table->display(); ?>
 		</form>
             </div>
         </div>

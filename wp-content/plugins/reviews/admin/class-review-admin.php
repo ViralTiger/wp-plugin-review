@@ -165,7 +165,7 @@ class Admin
     {
         $arguments	=	array(
                             'label'		=>	__('Reviews Per Page', $this->plugin_text_domain),
-                            'default'	=>	5,
+                            'default'	=>	10,
                             'option'	=>	'reviews_per_page'
                         );
 

@@ -46,8 +46,18 @@ class Review_List_Table extends Duplicate_WP_List_Table
     // just the barebone implementation.
     public function get_columns()
     {
+        $table_columns = array(
+            'cb'		=> '<input type="checkbox" />', // to display the checkbox.
+            'user_login'	=> __('User Login', $this->plugin_text_domain),
+            'display_name'	=> __('Display Name', $this->plugin_text_domain),
+            'user_registered' => _x('Registered On', 'column name', $this->plugin_text_domain),
+            'ID'		=> __('User Id', $this->plugin_text_domain),
+        );
+        return $table_columns;
     }
+
     public function prepare_items()
     {
+        _e('No users avaliable.', $this->plugin_text_domain);
     }
 }
