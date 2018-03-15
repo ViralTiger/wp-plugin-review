@@ -1,63 +1,83 @@
 <?php
-/*
-Plugin Name: Reviews
-*/
 
-// include('wp-list-table.php');
-// include(plugin_dir_path(__FILE__) . 'wp-list-table.php');
+/**
+ * The plugin bootstrap file
+ *
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function
+ * that starts the plugin.
+ *
+ * @link              http://example.com
+ * @since             1.0.0
+ * @package           Plugin_Name
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Reviews
+ * Plugin URI:        http://viralbamboo.com
+ * Description:       This is a basic products review plugin.
+ * Version:           1.0.0
+ * Author:            Viralbamboo
+ * Author URI:        http://viralbamboo.com/
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       reviews
+ * Domain Path:       /languages
+ */
 
-if (! class_exists('WP_List_Table')) {
-    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
+// If this file is called directly, abort.
+if (! defined('WPINC')) {
+    die;
 }
 
+/**
+ * Currently plugin version.
+ * Start at version 1.0.0 and use SemVer - https://semver.org
+ * Rename this for your plugin and update it as you release new versions.
+ */
+define('PLUGIN_NAME_VERSION', '1.0.0');
 
-# Activation and deactivation hooks provide ways to perform actions when plugins are activated or deactivated.
-
-register_activation_hook(__FILE__, 'createTable');
-
-function createTable()
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-reviews-activator.php
+ */
+function activate_plugin_name()
 {
-    global $wpdb;
-    $charset_collate = $wpdb->get_charset_collate();
-    $table_name = $wpdb->prefix . "reviews";
-    $sql = "CREATE TABLE $table_name (
-    id mediumint(9) NOT NULL AUTO_INCREMENT,
-    product varchar(191) DEFAULT '' NOT NULL,
-    full_name varchar(191) DEFAULT '' NOT NULL,
-    email varchar(191) DEFAULT '' NOT NULL,
-    title varchar(191) DEFAULT '' NOT NULL,
-    description varchar(191) DEFAULT '' NOT NULL,
-    rating tinyint(9) DEFAULT 0 NOT NULL,
-    is_approved tinyint(1) DEFAULT 0 NOT NULL,
-    time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-    PRIMARY KEY  (id)
-  ) $charset_collate;";
-
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql);
+    require_once plugin_dir_path(__FILE__) . 'includes/class-reviews-activator.php';
+    Plugin_Name_Activator::activate();
 }
 
-register_deactivation_hook(__FILE__, 'dropTable');
-
-function dropTable()
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-reviews-deactivator.php
+ */
+function deactivate_plugin_name()
 {
-    global $wpdb;
-    $charset_collate = $wpdb->get_charset_collate();
-    $table_name = $wpdb->prefix . "reviews";
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    $wpdb->query("DROP TABLE IF EXISTS $table_name");
+    require_once plugin_dir_path(__FILE__) . 'includes/class-reviews-deactivator.php';
+    Plugin_Name_Deactivator::deactivate();
 }
 
-# Create a Table for Review Management
+register_activation_hook(__FILE__, 'activate_plugin_name');
+register_deactivation_hook(__FILE__, 'deactivate_plugin_name');
 
-class Review_List_Table extends WP_List_Table
+/**
+ * The core plugin class that is used to define internationalization,
+ * admin-specific hooks, and public-facing site hooks.
+ */
+require plugin_dir_path(__FILE__) . 'includes/class-reviews.php';
+
+/**
+ * Begins execution of the plugin.
+ *
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
+ * not affect the page life cycle.
+ *
+ * @since    1.0.0
+ */
+function run_plugin_name()
 {
-    public function get_columns()
-    {
-    }
-    public function prepare_items()
-    {
-    }
+    $plugin = new Plugin_Name();
+    $plugin->run();
 }
-
-// $reviewList = new Review_List_Table();
+run_plugin_name();
