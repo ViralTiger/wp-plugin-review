@@ -96,36 +96,65 @@
   }
 ?>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<div id="respond">
+<section class="review-compser" id="respond">
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1" height="1" viewBox="0 0 1 1" style="visibility: none;">
+    <defs>
+      <symbol id="icon-star" data-name="icon-star" viewBox="0 0 25 25"><polygon points="12.47 18.39 6.28 21.44 7.26 14.61 2.45 9.65 9.25 8.48 12.47 2.37 15.7 8.48 22.5 9.65 17.69 14.61 18.67 21.44 12.47 18.39"/></symbol>
+      <!-- <symbol id="icon-star-half" data-name="icon-star-half" viewBox="0 0 25 25"><polygon points="12.47 18.39 6.28 21.44 7.26 14.61 2.45 9.65 9.25 8.48 12.47 2.37 15.7 8.48 22.5 9.65 17.69 14.61 18.67 21.44 12.47 18.39" style="fill: #646464;opacity: 0.38"/><path d="M12.47,2.37h0L9.25,8.48,2.45,9.65l4.81,5-1,6.83,6.19-3.05Z"/></symbol> -->
+      <symbol id="icon-arrow" data-name="icon-arrow" viewBox="0 0 24 24"><polygon points="13.71 3.29 12.29 4.71 18.59 11 3 11 3 13 18.59 13 12.29 19.29 13.71 20.71 22.41 12 13.71 3.29"/></symbol>
+    </defs>
+  </svg>
   <?php echo $response; ?>
   <form action="<?php the_permalink(); ?>" method="post">
-    <label for="name">Product: <span>*</span></label>
-    <select name="product" value="<?php echo esc_attr($_POST['product']); ?>">
-      <option value="Product">Product</option>
-    </select>
 
-    <label for="first_name">First Name: <span>*</span></label>
-    <input type="text" name="first_name" value="<?php echo esc_attr($_POST['first_name']); ?>">
+    <div class="stars-controller">
+      <?php for ($i = 0; $i < 5; $i ++): ?>
+        <span class="review-star-symbol" data-rating="<?php echo $i + 1; ?>"><svg width="36" height="36" viewBox="0 0 36 36"><use xlink:href="#icon-star"></use></svg></span>
+      <?php endfor ?>
+      <input type="hidden" name="rating" value="<?php echo esc_attr($_POST['rating']); ?>">
+    </div>
 
-    <label for="last_name">Last Name: <span>*</span></label>
-    <input type="text" name="last_name" value="<?php echo esc_attr($_POST['last_name']); ?>">
+    <div class="review-composer__select required">
+      <label for="name">Product:</label>
+      <select name="product" value="<?php echo esc_attr($_POST['product']); ?>">
+        <option value="Product">Product</option>
+      </select>
+    </div>
 
-    <label for="email">Email: <span>*</span></label>
-    <input type="text" name="email" value="<?php echo esc_attr($_POST['email']); ?>">
+    <div class="review-composer__name-group">
+      <div class="review-composer__text-input required">
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" value="<?php echo esc_attr($_POST['first_name']); ?>">
+      </div>
 
-    <label for="title">Title: <span>*</span></label>
-    <input type="text" name="title" value="<?php echo esc_attr($_POST['title']); ?>">
+      <div class="review-composer__text-input required">
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" value="<?php echo esc_attr($_POST['last_name']); ?>">
+      </div>
+    </div>
 
-    <label for="rating">Rating: <span>*</span></label>
-    <input type="text" name="rating" value="<?php echo esc_attr($_POST['rating']); ?>">
+    <div class="review-composer__text-input required">
+      <label for="email">Email:</label>
+      <input type="text" name="email" value="<?php echo esc_attr($_POST['email']); ?>">
+    </div>
 
-    <label for="description">Message: <span>*</span></label>
-    <textarea type="text" name="description"><?php echo esc_textarea($_POST['description']); ?></textarea>
+    <div class="review-composer__text-input required">
+      <label for="title">Review Title:</label>
+      <input type="text" name="title" value="<?php echo esc_attr($_POST['title']); ?>">
+    </div>
 
-    <label for="message_human">Human Verification: <span>*</span></label>
-    <input type="text" style="width: 60px;" name="message_human"> + 3 = 5
+    <div class="review-composer__text-input required">
+      <label for="description">Review Content:</label>
+      <textarea type="text" name="description"><?php echo esc_textarea($_POST['description']); ?></textarea>
+    </div>
+
+    <div class="review-composer__text-input required">
+      <label for="message_human">Human Verification:</label>
+      <input type="text" style="width: 60px;" name="message_human"> + 3 = 5
+    </div>
 
     <input type="hidden" name="submitted" value="1">
-    <input type="submit"></p>
+    <input type="submit">
+
   </form>
-</div>
+</section>

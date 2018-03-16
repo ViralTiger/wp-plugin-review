@@ -1,0 +1,85 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+@import 'variables';
+
+.review-compser {
+
+  form > * + * {
+    margin-top: 1em;
+  }
+  .error {
+    padding: 5px 9px;
+    border: 1px solid red;
+    border-radius: 3px;
+    color: red;
+  }
+
+  .success {
+    padding: 5px 9px;
+    border: 1px solid green;
+    border-radius: 3px;
+    color: green;
+  }
+
+  .review-star-symbol {
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.2s ease;
+    fill: $color-gray;
+    &:hover {
+      transform: scale(1.1);
+    }
+    &:active {
+      transform: scale(0.83);
+    }
+    &.gold {
+      fill: $color-gold;
+    }
+  }
+
+  .stars-controller {
+    &:hover {
+      .review-star-symbol.gold {
+        fill: tranparentize($color-gold, 0.3);
+      }
+    }
+  }
+
+  .review-composer__select {
+    select {
+      width: 100%;
+    }
+  }
+
+  .review-composer__name-group {
+    display: flex;
+    > * {
+      flex: 1 1 50%;
+      &:first-child {
+        margin-right: 0.3em;
+      }
+      &:last-child {
+        margin-left: 0.3em;
+      }
+    }
+  }
+
+  [name="message_human"] {
+    display: inline-block;
+  }
+
+  .required {
+    label {
+      &:after {
+        display: inline-block;
+        margin-left: 0.3em;
+        color: red;
+        content: '*';
+        opacity: 0.5;
+      }
+    }
+  }
+}

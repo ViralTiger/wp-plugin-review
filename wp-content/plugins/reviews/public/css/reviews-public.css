@@ -2,21 +2,54 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+.review-compser form > * + * {
+  margin-top: 1em; }
 
- .error{
-   padding: 5px 9px;
-   border: 1px solid red;
-   color: red;
-   border-radius: 3px;
- }
+.review-compser .error {
+  padding: 5px 9px;
+  border: 1px solid red;
+  border-radius: 3px;
+  color: red; }
 
- .success{
-   padding: 5px 9px;
-   border: 1px solid green;
-   color: green;
-   border-radius: 3px;
- }
+.review-compser .success {
+  padding: 5px 9px;
+  border: 1px solid green;
+  border-radius: 3px;
+  color: green; }
 
- form span{
-   color: red;
- }
+.review-compser .review-star-symbol {
+  display: inline-block;
+  cursor: pointer;
+  transition: 0.2s ease;
+  fill: rgba(100, 100, 100, 0.38); }
+  .review-compser .review-star-symbol:hover {
+    transform: scale(1.1); }
+  .review-compser .review-star-symbol:active {
+    transform: scale(0.83); }
+  .review-compser .review-star-symbol.gold {
+    fill: #ffcc0f; }
+
+.review-compser .stars-controller:hover .review-star-symbol.gold {
+  fill: tranparentize(#ffcc0f, 0.3); }
+
+.review-compser .review-composer__select select {
+  width: 100%; }
+
+.review-compser .review-composer__name-group {
+  display: flex; }
+  .review-compser .review-composer__name-group > * {
+    flex: 1 1 50%; }
+    .review-compser .review-composer__name-group > *:first-child {
+      margin-right: 0.3em; }
+    .review-compser .review-composer__name-group > *:last-child {
+      margin-left: 0.3em; }
+
+.review-compser [name="message_human"] {
+  display: inline-block; }
+
+.review-compser .required label:after {
+  display: inline-block;
+  margin-left: 0.3em;
+  color: red;
+  content: '*';
+  opacity: 0.5; }

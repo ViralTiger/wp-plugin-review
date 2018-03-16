@@ -29,4 +29,28 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	 function highlightStars(rating) {
+		 for (var i = 1; i <= 5; i++) {
+			 if (i <= +rating) {
+				 $('[data-rating=' + i + ']').addClass('gold');
+			 } else {
+				 $('[data-rating=' + i + ']').removeClass('gold');
+			 }
+		 }
+	 }
+
+	 $(function() {
+		 $('.review-star-symbol').click(function(){
+  		 var rating = $(this).attr('data-rating');
+			 $('[name="rating"]').val(rating);
+			 highlightStars(rating);
+  	 })
+		 $('.review-star-symbol').mouseenter(function(){
+			 highlightStars($(this).attr('data-rating'));
+		 })
+		 $('.review-star-symbol').mouseleave(function(){
+			 highlightStars($('[name="rating"]').val());
+		 })
+	 });
+
 })( jQuery );

@@ -1,0 +1,1 @@
+!function($){"use strict";$(".review-star-symbol").click(function(){var t=$(this).attr("data-rating");console.log(t),$('[name="rating"]').val(t)})}(jQuery);
