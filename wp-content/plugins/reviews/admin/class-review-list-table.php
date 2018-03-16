@@ -48,10 +48,13 @@ class Review_List_Table extends Duplicate_WP_List_Table
     {
         $table_columns = array(
             'cb'		=> '<input type="checkbox" />', // to display the checkbox.
-            'user_login'	=> __('User Login', $this->plugin_text_domain),
-            'display_name'	=> __('Display Name', $this->plugin_text_domain),
-            'user_registered' => _x('Registered On', 'column name', $this->plugin_text_domain),
-            'ID'		=> __('User Id', $this->plugin_text_domain),
+            'product'	=> __('Product', $this->plugin_text_domain),
+            'first_name'	=> __('First Name', $this->plugin_text_domain),
+            'last_name'	  => __('Last Name', $this->plugin_text_domain),
+            'title'       => __('Title', $this->plugin_text_domain),
+            'rating'      => __('Rating', $this->plugin_text_domain),
+            'is_approved'		=> __('Is Approved', $this->plugin_text_domain),
+            'id'		        => __('Id', $this->plugin_text_domain),
         );
         return $table_columns;
     }
@@ -81,14 +84,14 @@ class Review_List_Table extends Duplicate_WP_List_Table
     public function fetch_table_data()
     {
         global $wpdb;
-        $wpdb_table = $wpdb->prefix . 'users';
-        $orderby = (isset($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'user_registered';
+        $wpdb_table = $wpdb->prefix . 'reviews';
+        $orderby = (isset($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'time';
         $order = (isset($_GET['order'])) ? esc_sql($_GET['order']) : 'ASC';
         $user_query = "SELECT
-                     user_login, display_name, user_registered, ID
+                     product, first_name, last_name, title, rating, is_approved, id
                    FROM
                      $wpdb_table
-                   ORDER BY $orderby $order";
+                    ORDER BY $orderby $order";
         // query output_type will be an associative array with ARRAY_A.
         $query_results = $wpdb->get_results($user_query, ARRAY_A);
 
@@ -99,9 +102,13 @@ class Review_List_Table extends Duplicate_WP_List_Table
     public function column_default($item, $column_name)
     {
         switch ($column_name) {
-        case 'display_name':
-        case 'user_registered':
-        case 'ID':
+        case 'product':
+        case 'first_name':
+        case 'last_name':
+        case 'title':
+        case 'rating':
+        case 'is_approved':
+        case 'id':
             return $item[$column_name];
         default:
           return $item[$column_name];

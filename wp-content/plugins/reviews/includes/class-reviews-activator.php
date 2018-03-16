@@ -38,7 +38,8 @@ class Plugin_Name_Activator
         $sql = "CREATE TABLE $table_name (
 		    id mediumint(9) NOT NULL AUTO_INCREMENT,
 		    product varchar(191) DEFAULT '' NOT NULL,
-		    full_name varchar(191) DEFAULT '' NOT NULL,
+		    first_name varchar(191) DEFAULT '' NOT NULL,
+		    last_name varchar(191) DEFAULT '' NOT NULL,
 		    email varchar(191) DEFAULT '' NOT NULL,
 		    title varchar(191) DEFAULT '' NOT NULL,
 		    description varchar(191) DEFAULT '' NOT NULL,
