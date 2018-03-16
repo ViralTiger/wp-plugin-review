@@ -66,8 +66,19 @@ class Review_List_Table extends Duplicate_WP_List_Table
 
     public function prepare_items()
     {
+        // search box
+        $review_search_key = isset($_REQUEST['s']) ? wp_unslash(trim($_REQUEST['s'])) : '';
 
-      // code to handle bulk actions
+        $this->_column_headers = $this->get_column_info();
+
+        // check and process any actions such as bulk actions.
+        $this->handle_table_actions();
+        // fetch the table data
+        $table_data = $this->fetch_table_data();
+        // filter the data in case of a search
+        if ($review_search_key) {
+            $table_data = $this->filter_table_data($table_data, $review_search_key);
+        }
 
         //used by WordPress to build and fetch the _column_headers property
         $this->_column_headers = $this->get_column_info();
@@ -78,7 +89,19 @@ class Review_List_Table extends Duplicate_WP_List_Table
         // start by assigning your data to the items variable
         $this->items = $table_data;
 
-        // code to handle pagination
+        // code for pagination
+        $reviews_per_page = $this->get_items_per_page('reviews_per_page');
+        $table_page = $this->get_pagenum();
+        // provide the ordered data to the List Table
+        // we need to manually slice the data based on the current pagination
+        $this->items = array_slice($table_data, (($table_page - 1) * $reviews_per_page), $reviews_per_page);
+        // set the pagination arguments
+        $total_reviews = count($table_data);
+        $this->set_pagination_args(array(
+          'total_items' => $total_reviews,
+          'per_page'    => $reviews_per_page,
+          'total_pages' => ceil($total_reviews/$reviews_per_page)
+        ));
     }
 
     public function fetch_table_data()
@@ -87,13 +110,13 @@ class Review_List_Table extends Duplicate_WP_List_Table
         $wpdb_table = $wpdb->prefix . 'reviews';
         $orderby = (isset($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'time';
         $order = (isset($_GET['order'])) ? esc_sql($_GET['order']) : 'ASC';
-        $user_query = "SELECT
+        $review_query = "SELECT
                      product, first_name, last_name, title, rating, is_approved, id
                    FROM
                      $wpdb_table
                     ORDER BY $orderby $order";
         // query output_type will be an associative array with ARRAY_A.
-        $query_results = $wpdb->get_results($user_query, ARRAY_A);
+        $query_results = $wpdb->get_results($review_query, ARRAY_A);
 
         // return result array to prepare_items.
         return $query_results;
@@ -125,7 +148,7 @@ class Review_List_Table extends Duplicate_WP_List_Table
     {
         return sprintf(
         '<label class="screen-reader-text" for="review_' . $item['ID'] . '">' . sprintf(__('Select %s'), $item['review_login']) . '</label>'
-        . "<input type='checkbox' name='users[]' id='review_{$item['ID']}' value='{$item['ID']}' />"
+        . "<input type='checkbox' name='reviews[]' id='review_{$item['ID']}' value='{$item['ID']}' />"
         );
     }
 
