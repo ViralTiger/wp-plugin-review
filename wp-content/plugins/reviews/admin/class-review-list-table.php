@@ -128,4 +128,22 @@ class Review_List_Table extends Duplicate_WP_List_Table
         . "<input type='checkbox' name='users[]' id='review_{$item['ID']}' value='{$item['ID']}' />"
         );
     }
+
+    protected function get_sortable_columns()
+    {
+        /*
+        * actual sorting still needs to be done by prepare_items.
+    	 * specify which columns should have the sort icon.
+    	 */
+        $sortable_columns = array(
+                'id' => array( 'id', true ),
+                'product'=>'product',
+                'first_name'=>'first_name',
+                'last_name'=>'last_name',
+                'title'=>'title',
+                'rating'=>'rating',
+                'is_approved'=>'is_approved',
+            );
+        return $sortable_columns;
+    }
 }
