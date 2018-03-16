@@ -147,8 +147,8 @@ class Review_List_Table extends Duplicate_WP_List_Table
     protected function column_cb($item)
     {
         return sprintf(
-        '<label class="screen-reader-text" for="review_' . $item['ID'] . '">' . sprintf(__('Select %s'), $item['review_login']) . '</label>'
-        . "<input type='checkbox' name='reviews[]' id='review_{$item['ID']}' value='{$item['ID']}' />"
+        '<label class="screen-reader-text" for="review_' . $item['id'] . '">' . sprintf(__('Select %s'), $item['id']) . '</label>'
+        . "<input type='checkbox' name='reviews[]' id='review_{$item['id']}' value='{$item['id']}' />"
         );
     }
 
