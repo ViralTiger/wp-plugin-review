@@ -16,7 +16,7 @@
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 
 <div class="wrap">
-    <h2><?php _e('WP List Table Demo', $this->plugin_text_domain); ?></h2>
+    <h2><?php _e('Product Reviews Table', $this->plugin_text_domain); ?></h2>
         <div id="nds-wp-list-table-demo">
             <div id="nds-post-body">
 		<form id="nds-user-list-form" method="get">
