@@ -114,4 +114,18 @@ class Review_List_Table extends Duplicate_WP_List_Table
           return $item[$column_name];
         }
     }
+
+    /**
+     * Get value for checkbox column.
+     *
+     * @param object $item  A row's data.
+     * @return string Text to be placed inside the column <td>.
+     */
+    protected function column_cb($item)
+    {
+        return sprintf(
+        '<label class="screen-reader-text" for="review_' . $item['ID'] . '">' . sprintf(__('Select %s'), $item['review_login']) . '</label>'
+        . "<input type='checkbox' name='users[]' id='review_{$item['ID']}' value='{$item['ID']}' />"
+        );
+    }
 }
