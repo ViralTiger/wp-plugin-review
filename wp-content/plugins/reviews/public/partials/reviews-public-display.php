@@ -119,27 +119,27 @@
                   }
         if (empty($review['first_name'])) {
                       my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
+                         echo "<div class='error'> first name field is empty</div>";
                          $fnamerr = "inline";
                   }
         if (empty($review['last_name'])) {
                       my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
+                         echo "<div class='error'> last name field is empty</div>";
                          $lnamerr = "inline";
                   }
         if (empty($review['email'])) {
                       my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
+                         echo "<div class='error'> email field is empty</div>";
                          $emailerror = "inline";
                   }
                   if (empty($review['description'])) {
                       my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
+                         echo "<div class='error'> review content field is empty</div>";
                          $descerr = "inline";
                   }
                   if (empty($review['title'])) {
                       my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
+                         echo "<div class='error'> review title field is empty</div>";
                          $titlerr = "inline";
                   }
 
