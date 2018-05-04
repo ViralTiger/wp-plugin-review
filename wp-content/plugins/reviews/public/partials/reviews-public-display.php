@@ -17,13 +17,6 @@
   //response generation function
 
   $response = "";
-  $fnamerr = "none";
-  $emailerror = "none";
-  $titlerr ="none";
-  $lnamerr = "none";
-  $descerr = "none";
-  $humanerr = "none";
-
 
   //function to generate response
   function my_contact_form_generate_response($type, $message)
@@ -43,40 +36,8 @@
   $message_unsent  = "Message was not sent. Try Again.";
   $message_sent    = "Thanks! Your message has been sent.";
 
-
-
-      // if (isset($_POST['submit'])) {
-      //   $h = 'dfsdfsdfsdf';
-      //   $review = [
-      //       'product'   => $_POST['product'],
-      //       'first_name' => $_POST['first_name'],
-      //       'last_name'  => $_POST['last_name'],
-      //       'email'      => $_POST['email'],
-      //       'title'      =>  $_POST['title'],
-      //       'description' => $_POST['description'],
-      //       'rating'      => $_POST['rating'],
-      //     ];
-      //     echo '<script language="javascript">';
-      //     // echo 'alert("'.$h.'")';
-      //     echo '</script>';
-      //     insertReview($review);
-      // }
-      //
-      // function insertReview($review)
-      // {
-      //     global $wpdb;
-      //     $wpdb->insert(
-      //         $wpdb->prefix . 'reviews',
-      //         $review
-      //     );
-      //
-      // }
-
-
-  //
   //user posted variables
-  if (isset($_POST['submit'])) {
-
+  if (isset($_POST['product'])) {
       $review = [
       'product'   => $_POST['product'],
       'first_name' => $_POST['first_name'],
@@ -84,9 +45,8 @@
       'email'      => $_POST['email'],
       'title'      =>  $_POST['title'],
       'description' => $_POST['description'],
-      'rating'      => $_POST['rating']
+      'rating'      => $_POST['rating'],
     ];
-
       $human  = $_POST['message_human'];
       //php mailer variables
       $to = get_option('admin_email');
@@ -98,70 +58,30 @@
       if (!$human == 0) {
           if ($human != 2) {
               my_contact_form_generate_response("error", $not_human);
-              // echo '<script language="javascript">';
-                 echo "<div class='error'>{$not_human}</div>";
-                 // echo '</script>';
-                 $humanerr = "inline";
-
           } //not human!
           else {
 
-            //validate email
+         //validate email
               if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL)) {
                   my_contact_form_generate_response("error", $email_invalid);
-                  echo "<div class='error'>{$email_invalid}</div>";
-
               } else { //email is valid
                   //validate presence of name and message
-                  if (($review['rating']) < 1) {
-                    my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> please rate this product </div>";
-                  }
-                  elseif (empty($review['first_name'])) {
+                  if (empty($review['email'])) {
                       my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
-                         $fnamerr = "inline";
-                  }
-                  elseif (empty($review['last_name'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
-                         $lnamerr = "inline";
-                  }
-                  elseif (empty($review['email'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
-                         $emailerror = "inline";
-                  }
-                  elseif (empty($review[''])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
-                         $emailerror = "inline";
-                  }
-                  elseif (empty($review['title'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> $missing_content</div>";
-                         $titlerr = "inline";
-                  }
-
-                  else { //ready to go!
+                  } else { //ready to go!
                       $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
                       if ($sent) {
                           insertReview($review);
                           my_contact_form_generate_response("success", $message_sent);
-                          echo "<div class='success'>{$message_sent}</div>";
                       } //message sent!
                       else {
                           my_contact_form_generate_response("error", $message_unsent);
-                          echo "<div class='error'>{$message_unsent}</div>";
                       } //message wasn't sent
                   }
               }
           }
       } elseif ($_POST['submitted']) {
           my_contact_form_generate_response("error", $missing_content);
-          echo '<script language="javascript">';
-             echo 'alert("'.$missing_content.'")';
-             echo '</script>';
       }
   }
 
@@ -195,45 +115,46 @@
     </div>
 
     <div class="review-composer__select required">
-      <label for="name">Product: </label>
-      <select name="product" value="<?php echo $_POST['product']; ?>">
-        <option value="Product">Product  </option>
+      <label for="name">Product:</label>
+      <select name="product" value="<?php echo esc_attr($_POST['product']); ?>">
+        <option value="Product">Product</option>
       </select>
     </div>
 
     <div class="review-composer__name-group">
       <div class="review-composer__text-input required">
-        <label for="first_name">First Name: <div style="color:blue; display:<?php echo $fnamerr; ?> ;" class="fname-error"> ERRRROR  </div> </label>
+        <label for="first_name">First Name:</label>
         <input type="text" name="first_name" value="<?php echo esc_attr($_POST['first_name']); ?>">
       </div>
 
       <div class="review-composer__text-input required">
-        <label for="last_name">Last Name: <div style="color:blue; display:<?php echo $lnamerr; ?> ;" class="fname-error"> ERRRROR  </div></label>
+        <label for="last_name">Last Name:</label>
         <input type="text" name="last_name" value="<?php echo esc_attr($_POST['last_name']); ?>">
       </div>
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="email">Email: <div style="color:blue; display:<?php echo $emailerror; ?> ;" class="fname-error"> ERRRROR  </div></label>
+      <label for="email">Email:</label>
       <input type="text" name="email" value="<?php echo esc_attr($_POST['email']); ?>">
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="title">Review Title: <div style="color:blue; display:<?php echo $titlerr; ?> ;" class="fname-error"> ERRRROR  </div></label>
+      <label for="title">Review Title:</label>
       <input type="text" name="title" value="<?php echo esc_attr($_POST['title']); ?>">
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="description">Review Content: <div style="color:blue; display:<?php echo $descerr; ?> ;" class="fname-error"> ERRRROR  </div></label>
+      <label for="description">Review Content:</label>
       <textarea type="text" name="description"><?php echo esc_textarea($_POST['description']); ?></textarea>
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="message_human">Human Verification: <div style="color:blue; display:<?php echo $humanerr; ?> ;" class="fname-error"> ERRRROR  </div></div></label>
+      <label for="message_human">Human Verification:</label>
       <input type="text" style="width: 60px;" name="message_human"> + 3 = 5
     </div>
 
-    <!-- <input type="hidden" name="submitted" value="1"> -->
-    <input type="submit" name="submit">
+    <input type="hidden" name="submitted" value="1">
+    <input type="submit">
+
   </form>
 </section>
