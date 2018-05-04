@@ -117,27 +117,27 @@
                     my_contact_form_generate_response("error", $missing_content);
                          echo "<div class='error'> please rate this product </div>";
                   }
-                  elseif (empty($review['first_name'])) {
+        if (empty($review['first_name'])) {
                       my_contact_form_generate_response("error", $missing_content);
                          echo "<div class='error'> $missing_content</div>";
                          $fnamerr = "inline";
                   }
-                  elseif (empty($review['last_name'])) {
+        if (empty($review['last_name'])) {
                       my_contact_form_generate_response("error", $missing_content);
                          echo "<div class='error'> $missing_content</div>";
                          $lnamerr = "inline";
                   }
-                  elseif (empty($review['email'])) {
+        if (empty($review['email'])) {
                       my_contact_form_generate_response("error", $missing_content);
                          echo "<div class='error'> $missing_content</div>";
                          $emailerror = "inline";
                   }
-                  elseif (empty($review[''])) {
+                  if (empty($review['description'])) {
                       my_contact_form_generate_response("error", $missing_content);
                          echo "<div class='error'> $missing_content</div>";
-                         $emailerror = "inline";
+                         $descerr = "inline";
                   }
-                  elseif (empty($review['title'])) {
+                  if (empty($review['title'])) {
                       my_contact_form_generate_response("error", $missing_content);
                          echo "<div class='error'> $missing_content</div>";
                          $titlerr = "inline";
