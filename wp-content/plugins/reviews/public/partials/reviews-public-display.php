@@ -74,7 +74,7 @@
 
           if (empty($review['rating'])) {
             my_contact_form_generate_response("error", $missing_content);
-            echo "<div class='error'> please rate this product </div>";
+            echo "<div class='error'> Please rate this product </div>";
           }
           else{
             $success_counter++;
@@ -101,7 +101,7 @@
 
           if (empty($review['first_name'])) {
               my_contact_form_generate_response("error", $missing_content);
-                  echo "<div class='error'> first name field is empty</div>";
+                  echo "<div class='error'> First name field is empty</div>";
                   $fnamerr = "inline";
           }
           else{
@@ -109,7 +109,7 @@
           }
           if (empty($review['last_name'])) {
               my_contact_form_generate_response("error", $missing_content);
-                  echo "<div class='error'> last name field is empty</div>";
+                  echo "<div class='error'> Last name field is empty</div>";
                   $lnamerr = "inline";
           }
           else{
@@ -117,7 +117,7 @@
           }
           if (empty($review['description'])) {
               my_contact_form_generate_response("error", $missing_content);
-                  echo "<div class='error'> review title field is empty</div>";
+                  echo "<div class='error'> Review title field is empty</div>";
                   $descerr = "inline";
           }
           else{
@@ -125,7 +125,7 @@
           }
           if (empty($review['title'])) {
               my_contact_form_generate_response("error", $missing_content);
-                  echo "<div class='error'> review content field is empty</div>";
+                  echo "<div class='error'> Review content field is empty</div>";
                   $titlerr = "inline";
           }
           else{
@@ -263,33 +263,33 @@
 
     <div class="review-composer__name-group">
       <div class="review-composer__text-input required">
-        <label for="first_name">First Name: <div style="color:blue; display:<?php echo $fnamerr; ?> ;" class="fname-error"> ERRRROR  </div> </label>
+        <label for="first_name">First Name: <div style="color:#FF0800; text-decoration: underline;font-weight:bold;display:<?php echo $fnamerr; ?> ;" class="fname-error"> Not A Valid Name </div> </label>
         <input type="text" name="first_name" value="<?php echo esc_attr($_POST['first_name']); ?>">
       </div>
 
       <div class="review-composer__text-input required">
-        <label for="last_name">Last Name: <div style="color:blue; display:<?php echo $lnamerr; ?> ;" class="fname-error"> ERRRROR  </div></label>
+        <label for="last_name">Last Name: <div style="color:#FF0800; text-decoration: underline;font-weight: bold; display:<?php echo $lnamerr; ?> ;" class="fname-error"> Not A Valid Name </div></label>
         <input type="text" name="last_name" value="<?php echo esc_attr($_POST['last_name']); ?>">
       </div>
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="email">Email: <div style="color:blue; display:<?php echo $emailerror; ?> ;" class="fname-error"> ERRRROR  </div></label>
+      <label for="email">Email: <div style="color:#FF0800; text-decoration: underline;font-weight:bold;display:<?php echo $emailerror; ?> ;" class="fname-error"> Not Valid Email </div></label>
       <input type="text" name="email" value="<?php echo esc_attr($_POST['email']); ?>">
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="title">Review Title: <div style="color:blue; display:<?php echo $titlerr; ?> ;" class="fname-error"> ERRRROR  </div></label>
+      <label for="title">Review Title: <div style="color:#FF0800; text-decoration: underline;font-weight:bold;display:<?php echo $titlerr; ?> ;" class="fname-error"> Empty </div></label>
       <input type="text" name="title" value="<?php echo esc_attr($_POST['title']); ?>">
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="description">Review Content: <div style="color:blue; display:<?php echo $descerr; ?> ;" class="fname-error"> ERRRROR  </div></label>
+      <label for="description">Review Content: <div style="color:#FF0800; text-decoration: underline;font-weight:bold;display:<?php echo $descerr; ?> ;" class="fname-error"> Empty </div></label>
       <textarea type="text" name="description"><?php echo esc_textarea($_POST['description']); ?></textarea>
     </div>
 
     <div class="review-composer__text-input required">
-      <label for="message_human">Human Verification: <div style="color:blue; display:<?php echo $humanerr; ?> ;" class="fname-error"> ERRRROR  </div></div></label>
+      <label for="message_human">Human Verification: <div style="color:#FF0800; text-decoration: underline;font-weight:bold;display:<?php echo $humanerr; ?> ;" class="fname-error"> Not Valid  </div></div></label>
       <input type="text" style="width: 60px;" name="message_human"> + 3 = 5
     </div>
 
