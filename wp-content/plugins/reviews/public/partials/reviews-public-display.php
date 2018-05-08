@@ -43,37 +43,6 @@
   $message_unsent  = "Message was not sent. Try Again.";
   $message_sent    = "Thanks! Your message has been sent.";
 
-
-
-      // if (isset($_POST['submit'])) {
-      //   $h = 'dfsdfsdfsdf';
-      //   $review = [
-      //       'product'   => $_POST['product'],
-      //       'first_name' => $_POST['first_name'],
-      //       'last_name'  => $_POST['last_name'],
-      //       'email'      => $_POST['email'],
-      //       'title'      =>  $_POST['title'],
-      //       'description' => $_POST['description'],
-      //       'rating'      => $_POST['rating'],
-      //     ];
-      //     echo '<script language="javascript">';
-      //     // echo 'alert("'.$h.'")';
-      //     echo '</script>';
-      //     insertReview($review);
-      // }
-      //
-      // function insertReview($review)
-      // {
-      //     global $wpdb;
-      //     $wpdb->insert(
-      //         $wpdb->prefix . 'reviews',
-      //         $review
-      //     );
-      //
-      // }
-
-
-  //
   //user posted variables
   if (isset($_POST['submit'])) {
 
@@ -87,6 +56,8 @@
       'rating'      => $_POST['rating']
     ];
 
+
+      $success_counter = 0;
       $human  = $_POST['message_human'];
       //php mailer variables
       $to = get_option('admin_email');
@@ -95,74 +66,163 @@
                  'Reply-To: ' . $review['email'] . "\r\n";
 
 
-      if (!$human == 0) {
-          if ($human != 2) {
-              my_contact_form_generate_response("error", $not_human);
-              // echo '<script language="javascript">';
-                 echo "<div class='error'>{$not_human}</div>";
-                 // echo '</script>';
-                 $humanerr = "inline";
+        if(empty($review['rating']) and empty($review['description']) and empty($_POST['message_human']) and empty($review['first_name']) and empty($review['last_name']) and empty($review['email']) and empty($review['title'])){
+            my_contact_form_generate_response("success", $message_sent);
+            echo "<div class='success'>All Fields Are Empty</div>";
+        }
+        else {
 
-          } //not human!
-          else {
-
-            //validate email
-              if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL)) {
-                  my_contact_form_generate_response("error", $email_invalid);
-                  echo "<div class='error'>{$email_invalid}</div>";
-
-              } else { //email is valid
-                  //validate presence of name and message
-                  if (($review['rating']) < 1) {
-                    my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> please rate this product </div>";
-                  }
-        if (empty($review['first_name'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> first name field is empty</div>";
-                         $fnamerr = "inline";
-                  }
-        if (empty($review['last_name'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> last name field is empty</div>";
-                         $lnamerr = "inline";
-                  }
-        if (empty($review['email'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> email field is empty</div>";
-                         $emailerror = "inline";
-                  }
-                  if (empty($review['description'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> review content field is empty</div>";
-                         $descerr = "inline";
-                  }
-                  if (empty($review['title'])) {
-                      my_contact_form_generate_response("error", $missing_content);
-                         echo "<div class='error'> review title field is empty</div>";
-                         $titlerr = "inline";
-                  }
-
-                  else { //ready to go!
-                      $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
-                      if ($sent) {
-                          insertReview($review);
-                          my_contact_form_generate_response("success", $message_sent);
-                          echo "<div class='success'>{$message_sent}</div>";
-                      } //message sent!
-                      else {
-                          my_contact_form_generate_response("error", $message_unsent);
-                          echo "<div class='error'>{$message_unsent}</div>";
-                      } //message wasn't sent
-                  }
-              }
+          if (empty($review['rating'])) {
+            my_contact_form_generate_response("error", $missing_content);
+            echo "<div class='error'> please rate this product </div>";
           }
-      } elseif ($_POST['submitted']) {
-          my_contact_form_generate_response("error", $missing_content);
-          echo '<script language="javascript">';
-             echo 'alert("'.$missing_content.'")';
-             echo '</script>';
+          else{
+            $success_counter++;
+          }
+          if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL) || empty($review['email'])) {
+              my_contact_form_generate_response("error", $email_invalid);
+              echo "<div class='error'>{$email_invalid}</div>";
+              $emailerror = "inline";
+          }
+          else{
+            $success_counter++;
+          }
+
+          if($human != 2){
+            my_contact_form_generate_response("error", $not_human);
+              // echo '<script language="javascript">';
+              echo "<div class='error'>{$not_human}</div>";
+              // echo '</script>';
+              $humanerr = "inline";
+          }
+          else{
+            $success_counter++;
+          }
+
+          if (empty($review['first_name'])) {
+              my_contact_form_generate_response("error", $missing_content);
+                  echo "<div class='error'> first name field is empty</div>";
+                  $fnamerr = "inline";
+          }
+          else{
+            $success_counter++;
+          }
+          if (empty($review['last_name'])) {
+              my_contact_form_generate_response("error", $missing_content);
+                  echo "<div class='error'> last name field is empty</div>";
+                  $lnamerr = "inline";
+          }
+          else{
+            $success_counter++;
+          }
+          if (empty($review['description'])) {
+              my_contact_form_generate_response("error", $missing_content);
+                  echo "<div class='error'> review title field is empty</div>";
+                  $descerr = "inline";
+          }
+          else{
+            $success_counter++;
+          }
+          if (empty($review['title'])) {
+              my_contact_form_generate_response("error", $missing_content);
+                  echo "<div class='error'> review content field is empty</div>";
+                  $titlerr = "inline";
+          }
+          else{
+            $success_counter++;
+          }
+
+          if($success_counter == 7){
+            $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
+            if ($sent) {
+                insertReview($review);
+                my_contact_form_generate_response("success", $message_sent);
+                echo "<div class='success'>{$message_sent} </div>";
+            } //message sent!
+            else {
+                my_contact_form_generate_response("error", $message_unsent);
+                echo "<div class='error'>{$message_unsent}</div>";
+            } //message wasn't sent
+          }
+
       }
+
+      // if (!$human == 0) {
+      //
+      //     if ($human != 2) {
+      //         my_contact_form_generate_response("error", $not_human);
+      //         // echo '<script language="javascript">';
+      //            echo "<div class='error'>{$not_human}</div>";
+      //            // echo '</script>';
+      //            $humanerr = "inline";
+      //     } //not human!
+      //
+      //     if(filter_var($human, FILTER_VALIDATE_INT) === false){
+      //       my_contact_form_generate_response("error", $missing_content);
+      //       echo "<div class='error'>please verify your human</div>";
+      //     }
+      //     else {
+      //
+      //         //validate email
+      //
+      //         if (!filter_var($review['email'], FILTER_VALIDATE_EMAIL) || empty($review['email'])) {
+      //             my_contact_form_generate_response("error", $email_invalid);
+      //             echo "<div class='error'>{$email_invalid}</div>";
+      //             $emailerror = "inline";
+      //
+      //         } else { //email is valid
+      //
+      //             //validate presence of name and message
+      //             if (empty($review['rating'])) {
+      //               my_contact_form_generate_response("error", $missing_content);
+      //                    echo "<div class='error'> please rate this product </div>";
+      //             }
+      //             if (empty($review['first_name'])) {
+      //                 my_contact_form_generate_response("error", $missing_content);
+      //                    echo "<div class='error'> first name field is empty</div>";
+      //                    $fnamerr = "inline";
+      //             }
+      //             if (empty($review['last_name'])) {
+      //                 my_contact_form_generate_response("error", $missing_content);
+      //                    echo "<div class='error'> last name field is empty</div>";
+      //                    $lnamerr = "inline";
+      //             }
+      //             if (empty($review['description'])) {
+      //                 my_contact_form_generate_response("error", $missing_content);
+      //                    echo "<div class='error'> review title field is empty</div>";
+      //                    $descerr = "inline";
+      //             }
+      //             if (empty($review['title'])) {
+      //                 my_contact_form_generate_response("error", $missing_content);
+      //                    echo "<div class='error'> review content field is empty</div>";
+      //                    $titlerr = "inline";
+      //             }
+      //             if (empty($review['title'])) {
+      //                 my_contact_form_generate_response("error", $missing_content);
+      //                    echo "<div class='error'> review content field is empty human </div>";
+      //                    $titlerr = "inline";
+      //             }
+      //
+      //             else { //ready to go!
+      //                 $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
+      //                 if ($sent) {
+      //                     insertReview($review);
+      //                     my_contact_form_generate_response("success", $message_sent);
+      //                     echo "<div class='success'>{$message_sent} </div>";
+      //                 } //message sent!
+      //                 else {
+      //                     my_contact_form_generate_response("error", $message_unsent);
+      //                     echo "<div class='error'>{$message_unsent}</div>";
+      //                 } //message wasn't sent
+      //             }
+      //         }
+      //     }
+      // } elseif ($_POST['submitted']) {
+          // my_contact_form_generate_response("error", $missing_content);
+          // echo '<script language="javascript">';
+          //    echo 'alert("'.$missing_content.'")';
+          //    echo '</script>';
+      // }
   }
 
 
