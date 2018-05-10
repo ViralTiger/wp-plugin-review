@@ -85,6 +85,7 @@ class Review_List_Table extends Duplicate_WP_List_Table
         $table_data = $this->fetch_table_data();
 
         // code to handle data operations like sorting and filtering
+        $this->process_bulk_action();
 
         // start by assigning your data to the items variable
         $this->items = $table_data;
@@ -136,6 +137,52 @@ class Review_List_Table extends Duplicate_WP_List_Table
         default:
           return $item[$column_name];
         }
+    }
+
+    function column_is_approved($item)
+    {
+      $idaprv = $item['is_approved'];
+
+        $aprv = ' ';
+        if ($idaprv == 0){
+          $aprv = 'Approve';
+        }
+        else {
+          $aprv = 'Disaprove';
+        }
+        $actions = array(
+          'edit' => sprintf('<a href="?page=%s&action=%s&id=%s">'.$aprv.'</a>',$_REQUEST['page'],'edit',$item['id']),
+          'delete' => sprintf('<a href="?page=%s&action=%s&id=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
+        );
+
+
+
+        return sprintf(
+            '%1$s %3$s',
+            $item['is_approved'],
+            $item['is_approved'],
+            $this->row_actions($actions)
+        );
+    }
+
+    function process_bulk_action()
+    {
+        global $wpdb;
+
+        if ('delete' === $this->current_action()) {
+          $event = $_GET['id'];
+          $wpdb->delete($wpdb->prefix.'reviews', array('id' => $event));
+          echo "<script> window.location.href = 'http://localhost:8888/wp-plugin-review/wp-admin/users.php?page=reviews' </script>";
+
+        }
+
+        if ('edit' === $this->current_action()) {
+          $event = $_GET['id'];
+          $wpdb->query( "
+             UPDATE {$wpdb->prefix}reviews SET is_approved = CASE WHEN @is_approved = 0 THEN @is_approved =1 ELSE is_approved = 0 END WHERE id ={$event};"
+          );
+          echo "<script> window.location.href = 'http://localhost:8888/wp-plugin-review/wp-admin/users.php?page=reviews' </script>";
+       }
     }
 
     /**

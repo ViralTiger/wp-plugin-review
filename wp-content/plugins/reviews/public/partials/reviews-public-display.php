@@ -135,29 +135,40 @@
           if($success_counter == 7){
             $sent = wp_mail($to, $subject, strip_tags($review['description']), $headers);
             if ($sent) {
-                insertReview($review);
+              insertReviewAndSendEmail($review, $human);
                 my_contact_form_generate_response("success", $message_sent);
                 echo "<div class='success'>{$message_sent} </div>";
-
             } //message sent!
             else {
                 my_contact_form_generate_response("error", $message_unsent);
-                echo "<div class='error'>{$message_unsent}</div>";
+                echo "<div class='error__message'>{$message_unsent}</div>";
             } //message wasn't sent
           }
 
       }
 }
 
+/**
+ * Function to save review to database
+ *
+ * @method insertReviewAndSendEmail
+ * @param  array $review
+ */
+function insertReviewAndSendEmail($review, $human)
+{
+    global $wpdb;
+    $wpdb->insert($wpdb->prefix . 'reviews', $review);
 
-  function insertReview($review)
-  {
-      global $wpdb;
-      $wpdb->insert(
-          $wpdb->prefix . 'reviews',
-          $review
-      );
-  }
+    // Send emails:
+    // $human  = $review['message_human'];
+    // //php mailer variables
+    $email = !empty($_POST['dmbs_review_email']) ? $_POST['dmbs_review_email'] : null;
+    $to = get_option('admin_email');
+    $subject = "Someone sent a message from ".get_bloginfo('name');
+    $headers = 'From: '. $email . "\r\n" .
+               'Reply-To: ' . $email . "\r\n";
+}
+
 ?>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <section class="review-compser" id="respond">
@@ -220,4 +231,4 @@
     <!-- <input type="hidden" name="submitted" value="1"> -->
     <input type="submit" name="submit">
   </form>
-</section>dmbs_review_product
+</section>
